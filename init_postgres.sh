@@ -7,7 +7,7 @@ BEFORE RUNNING THIS SCRIPT:
         sudo apt install postgresql postgresql-contrib
 
     2. postgres user must have entries in sudoers file - to restart postgres service due to conf file changes
-        visudo (ctrl +x to save)
+        sudo visudo (ctrl +x to save)
             postgres  ALL=(ALL:ALL) NOPASSWD: /bin/systemctl start postgresql
             postgres  ALL=(ALL:ALL) NOPASSWD: /bin/systemctl stop postgresql
             postgres  ALL=(ALL:ALL) NOPASSWD: /bin/systemctl status postgresql
@@ -30,7 +30,12 @@ BEFORE RUNNING THIS SCRIPT:
         DEFAULT_USER_ROLE
         DATABASE_NAME
 
-    5. result is a DB thats listening on server 0.0.0.0:5432 which API can read/write to
+    5. result of script is
+        a new superuser user w/ password
+        a new DB 
+        thats listening on 0.0.0.0:5432 
+        which accepts ipv4 connections from anywhere 
+            - API can read/write to it but should limit to API server IP
 '
 : '
     TODO:   
@@ -123,25 +128,25 @@ function pg_end()
 
 POSTGRES_DIR="/etc/postgresql/14/main"
 
-PG_HBA_CONF="pg_hba.conf.bkp.bkp"
+PG_HBA_CONF="pg_hba.conf"
 PG_HBA_CONF_IP_ADDRESS="0.0.0.0/0" # TODO: should be IP of server, not everything...
 PG_HBA_CONF_FULLPATH="${POSTGRES_DIR}/${PG_HBA_CONF}"
 
 
-PG_CONF="postgresql.conf.bkp"
-PG_CONF_LISTEN_ADDRESS="listen_addresses = 'aab'     # what IP address(es) to listen on;"
+PG_CONF="postgresql.conf"
+PG_CONF_LISTEN_ADDRESS="listen_addresses = '*'     # what IP address(es) to listen on;" # or localhost
 PG_CONF_FULLPATH="${POSTGRES_DIR}/${PG_CONF}"
 
-USER="user2"
-PASSWORD="password"
+USER="wine_admin"
+PASSWORD="super_strong_password"
 DEFAULT_USER_ROLE="SUPERUSER"
-DATABASE_NAME="db2"
+DATABASE_NAME="wine_db"
 
 
 pg_set_allowed_ip $PG_HBA_CONF_FULLPATH $PG_HBA_CONF_IP_ADDRESS
 pg_set_listen_interface $PG_CONF_FULLPATH "$PG_CONF_LISTEN_ADDRESS" # needs quotes because there's spaces in variable...''
 
-# revert the command below using this: sudo -u postgres psql; DROP USER user2; DROP DATABASE db2;
+# revert the command below using this: sudo -u postgres psql; DROP USER wine_admin; DROP DATABASE wine_db;
 pg_create_user $USER $PASSWORD
 pg_add_role_to_user $USER $DEFAULT_USER_ROLE
 pg_create_db $DATABASE_NAME

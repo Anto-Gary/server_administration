@@ -58,6 +58,18 @@
    - sudo apt-get install git
 
 
+2. ssh-keygen 
+   
+    - cat ~/.ssh/id_rsa.pub
+    
+      - copy output to github profile 
+
+
+3. git clone to /tmp directory 
+
+   - because postgres user doesn't have permissions to /home/ubuntu
+
+
 ### HOW 
 ---
 

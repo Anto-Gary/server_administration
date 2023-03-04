@@ -70,6 +70,9 @@
    - because postgres user doesn't have permissions to /home/ubuntu
 
 
+4. postgres DB schema should be 'public' unless there's a good reason not to 
+
+
 ### HOW 
 ---
 

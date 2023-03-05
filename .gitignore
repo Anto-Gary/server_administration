@@ -1,16 +1,17 @@
 # GLOBAL 
 __pycache__/
-venv/
-
 
 # DB FOLDER
-db/postgres/logs*
+db/postgres/logs/*
 !db/postgres/logs/.gitkeep
 
 
 # WEBSERVER FOLDER
-webserver/nginx/logs*
+webserver/nginx/logs/*
 !webserver/nginx/logs/.gitkeep
 
-webserver/nginx/templates/out*
+# SAVE DIR FOR TEMPLATES
+webserver/nginx/templates/out/*
 !webserver/nginx/templates/out/.gitkeep
+
+webserver/nginx/venv/

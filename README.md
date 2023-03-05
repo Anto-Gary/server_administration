@@ -109,3 +109,8 @@
 3. ./setup/root_init.sh
 
    - SUDOERS_RULES = additional sudoers rules postgres user should have 
+
+
+4. AWS STUFF 
+
+   - postgres listens on port 5432 by default

@@ -1,12 +1,10 @@
 #!/bin/bash
 
 
-
 # $1=absolute path to pg_hba.conf file 
 # $2=IP address that postgres should accept connections from
 function pg_set_allowed_ip()
 {
-    #https://stackoverflow.com/questions/38990892/change-specific-line-and-row-in-text-file-in-bash
     ALLOWED_HOSTS_LINENUM=$(cat ${1} | grep -iFn 'ipv4 local connections:' | cut -d ":" -f1)
     LINE_TO_REPLACE=$((ALLOWED_HOSTS_LINENUM + 1))
 
@@ -60,14 +58,14 @@ function pg_grant_user_db_privileges()
 
 function pg_services()
 {
-    echo -e "stopping postgres service\n"
+    echo -e "\nstopping postgres service\n"
     sudo /bin/systemctl stop postgresql
 
-    echo -e "starting postgres service\n"
+    echo -e "\nstarting postgres service\n"
     sudo /bin/systemctl start postgresql
 
+    echo -e "\ngetting postgres service status\n"
     sudo /bin/systemctl status postgresql
-    # sudo /bin/journalctl -xe
 }
 
 

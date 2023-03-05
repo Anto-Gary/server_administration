@@ -1,0 +1,112 @@
+------------------------------------------------------------------------------------------
+PRE REQUISITES
+------------------------------------------------------------------------------------------
+1. packages 
+    sudo apt install postgresql postgresql-contrib
+
+
+
+
+------------------------------------------------------------------------------------------
+POSTGRES FILE LOCATIONS 
+------------------------------------------------------------------------------------------
+
+/etc/postgresql/14/main
+/etc/postgresql/14/main/postgresql.conf
+/etc/postgresql/14/main/pg_hba.conf
+
+
+
+
+------------------------------------------------------------------------------------------
+POSTGRES USER COMMANDS
+------------------------------------------------------------------------------------------
+
+1. log in as postgres user to psql 
+     sudo -u postgres psql
+     sudo su postgres ; psql
+     
+2. log in to psql proper way 
+    psql -h [ip address] -p [port] -d [database] -U [username]
+    example: psql -h 0.0.0.0 -p 5432 -d wine_db -U wine_admin
+
+
+
+
+------------------------------------------------------------------------------------------
+PSQL COMMANDS
+------------------------------------------------------------------------------------------
+
+    \d+ <TABLE_NAME>
+        show table details 
+    \du 
+        show users
+
+    \l+ 
+        list of available databases
+
+    \conninfo
+        connection info
+
+    \c <db_name>
+        connect to DB?
+
+    \copy (SELECT * FROM __table_name__) TO 'file_path_and_name.csv' WITH CSV
+        copy table to CSV?
+
+    \password <USER>
+        change user password
+
+    \dn+
+        list schemas
+
+    \dt *.*
+        https://stackoverflow.com/questions/15644152/list-tables-in-a-postgresql-schema
+
+
+
+
+------------------------------------------------------------------------------------------
+SQL ADMIN QUERIES
+------------------------------------------------------------------------------------------
+select * from pg_user;
+SELECT current_database();
+
+set root user credentials 
+    ALTER USER postgres PASSWORD 'newpassword';
+
+create new user 
+    CREATE USER user1 WITH PASSWORD 'password';
+
+add superuser priviliges to new user
+    ALTER USER user1 WITH SUPERUSER;
+    https://flaviocopes.com/postgres-user-permissions/
+
+drop user 
+    DROP USER user1;
+
+create DB 
+    CREATE DATABASE db1;
+
+grant DB access to users
+    GRANT ALL PRIVILEGES ON DATABASE db1 TO user1;
+
+drop schema & all tables associated with it 
+    DROP SCHEMA "<schema_name>" CASCADE;
+ 
+    
+
+
+------------------------------------------------------------------------------------------
+SYS ADMIN COMMANDS 
+------------------------------------------------------------------------------------------
+
+1. postgres service 
+    service postgresql status
+    systemctl status postgresql
+
+2. check if listening on port 
+    ss -nlt | grep 5432
+
+3. is service running 
+    ps -ef | grep postgres

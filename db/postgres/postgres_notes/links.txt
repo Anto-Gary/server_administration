@@ -1,0 +1,25 @@
+PASS COMMANDS TO PSQL BASH SCRIPT 
+    https://serverfault.com/questions/447063/how-to-set-postgresql-user-password-in-bash-script
+
+
+HOW TO INSTALL POSTGRES 
+    https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-20-04
+    https://devopscube.com/install-postgresql-on-ubuntu/
+    https://adamtheautomator.com/install-postgresql-on-a-ubuntu/
+    BEST= https://www.makeuseof.com/install-configure-postgresql-on-ubuntu/
+
+
+CHEAT SHEETS
+    https://postgrescheatsheet.com/#/tables
+    https://gist.github.com/Kartones/dd3ff5ec5ea238d4c546
+    https://quickref.me/postgres
+    
+
+
+PGADMIN     
+    https://www.pgadmin.org/download/
+    sudo -u postgres psql ;  SELECT version();
+
+
+SUDOers
+   https://kifarunix.com/run-only-specific-commands-with-sudo-in-linux/ 

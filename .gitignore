@@ -1,0 +1,3 @@
+# keep folder but ignore contents
+db/postgres/logs*
+!db/postgres/logs/.gitkeep

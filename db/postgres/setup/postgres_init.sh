@@ -1,54 +1,10 @@
 #!/bin/bash
 
-: '
-BEFORE RUNNING THIS SCRIPT: 
-
-    1. install postgres packages on server
-        sudo apt install postgresql postgresql-contrib
-
-    2. postgres user must have entries in sudoers file - to restart postgres service due to conf file changes
-        sudo visudo (ctrl +x to save)
-            postgres  ALL=(ALL:ALL) NOPASSWD: /bin/systemctl start postgresql
-            postgres  ALL=(ALL:ALL) NOPASSWD: /bin/systemctl stop postgresql
-            postgres  ALL=(ALL:ALL) NOPASSWD: /bin/systemctl status postgresql
-            postgres  ALL=(ALL:ALL) NOPASSWD: /bin/journalctl -xe
-
-    2. script must be run as postgres user 
-        sudo -su postgres
-
-    3. check permissions on script
-        VS code connects as ubuntu user
-            script only works when run as postgres user
-                cant save in VS Code unless permissed are wonky
-
-    4. edit the following variables
-        PG_HBA_CONF
-        PG_CONF
-        PG_HBA_CONF_IP_ADDRESS
-        USER
-        PASSWORD
-        DEFAULT_USER_ROLE
-        DATABASE_NAME
-
-    5. result of script is
-        a new superuser user w/ password
-        a new DB 
-        thats listening on 0.0.0.0:5432 
-        which accepts ipv4 connections from anywhere 
-            - API can read/write to it but should limit to API server IP
-'
-: '
-    TODO:   
-        1. if script run as postgres, services cant be restarted
-            - FIXED
-'
-
 
 # $1=absolute path to pg_hba.conf file 
 # $2=IP address that postgres should accept connections from
 function pg_set_allowed_ip()
 {
-    #https://stackoverflow.com/questions/38990892/change-specific-line-and-row-in-text-file-in-bash
     ALLOWED_HOSTS_LINENUM=$(cat ${1} | grep -iFn 'ipv4 local connections:' | cut -d ":" -f1)
     LINE_TO_REPLACE=$((ALLOWED_HOSTS_LINENUM + 1))
 
@@ -100,17 +56,16 @@ function pg_grant_user_db_privileges()
 }
 
 
-# postgres user needs to be added to sudoers for this to work 
 function pg_services()
 {
-    echo -e "stopping postgres service\n"
+    echo -e "\nstopping postgres service\n"
     sudo /bin/systemctl stop postgresql
 
-    echo -e "starting postgres service\n"
+    echo -e "\nstarting postgres service\n"
     sudo /bin/systemctl start postgresql
 
+    echo -e "\ngetting postgres service status\n"
     sudo /bin/systemctl status postgresql
-    # sudo /bin/journalctl -xe
 }
 
 
@@ -126,6 +81,8 @@ function pg_end()
 }
 
 
+
+## INPUTS
 POSTGRES_DIR="/etc/postgresql/14/main"
 
 PG_HBA_CONF="pg_hba.conf"
@@ -143,16 +100,32 @@ DEFAULT_USER_ROLE="SUPERUSER"
 DATABASE_NAME="wine_db"
 
 
+# METHOD CALLS
 pg_set_allowed_ip $PG_HBA_CONF_FULLPATH $PG_HBA_CONF_IP_ADDRESS
 pg_set_listen_interface $PG_CONF_FULLPATH "$PG_CONF_LISTEN_ADDRESS" # needs quotes because there's spaces in variable...''
 
-# revert the command below using this: sudo -u postgres psql; DROP USER wine_admin; DROP DATABASE wine_db;
+# # revert the command below using this: sudo -u postgres psql; DROP USER wine_admin; DROP DATABASE wine_db;
 pg_create_user $USER $PASSWORD
 pg_add_role_to_user $USER $DEFAULT_USER_ROLE
 pg_create_db $DATABASE_NAME
-# pg_end
-# pg_grant_user_db_privileges $USER $DATABASE_NAME
 pg_services
+pg_end
+# # pg_grant_user_db_privileges $USER $DATABASE_NAME
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # psql -h localhost -p 5432 -d db2 -U user2
 # sudo passwd postgres SET PASSWORD FOR USER

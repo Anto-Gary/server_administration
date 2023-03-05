@@ -1,0 +1,2 @@
+unnecessary whitespace 
+    https://stackoverflow.com/questions/35775207/remove-unnecessary-whitespace-from-jinja-rendered-template

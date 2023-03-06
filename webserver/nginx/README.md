@@ -7,11 +7,11 @@
 ### TEMPLATE WORKFLOW
 ---
 
-### ./templates
+#### ./templates
 - add actual jinja template file here
 
 
-### ./templates/config 
+#### ./templates/config 
 - add JSON data corresponding to a template with same filename
 
 

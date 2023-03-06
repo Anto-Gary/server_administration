@@ -20,6 +20,25 @@ class NginxTemplater:
         self.ENVIRONMENT = Environment(loader=FileSystemLoader(config['templates_folder']))
 
 
+    def __create_new_out_subdir(self, directory: str, new_subdir: str) -> None:
+        """
+            directory: absolute path to .\\templates\\out
+            new_subdir: template name without file extension
+
+        returns C:\\.....\\templates\\out\\<template_name>
+        """
+
+        if not os.path.exists(directory):
+            raise NginxTemplaterException(f"'{directory}' must exist before creating subdirectory'{new_subdir}'")
+
+        new_dir = os.path.join(directory, new_subdir)
+        if not os.path.exists(new_dir):
+            # only executed when script first runs, folder isn't pushed to git
+            os.makedirs(new_dir)
+
+        return new_dir
+
+
     def create_template_result_save_path(self, out_dir: str, template_name: str) -> str:
         """
             out_dir: directory containing template results written by jinja2
@@ -30,10 +49,12 @@ class NginxTemplater:
 
         default_save_extension = ".conf"
         now = datetime.now(timezone.utc)
-        new_filename = os.path.splitext(template_name)[0]
-
         utc_now = now.strftime('%Y-%m-%dT%H-%M-%S')
-        return os.path.join(out_dir, f"{new_filename}-{utc_now}{default_save_extension}")
+
+        new_filename = os.path.splitext(template_name)[0]
+        new_out_dir = self.__create_new_out_subdir(out_dir, new_filename)
+
+        return os.path.join(new_out_dir, f"{new_filename}-{utc_now}{default_save_extension}")
     
 
     def save_template_result_to_fs(self, template_save_abspath: str, rendered_template: str) -> str:
@@ -50,17 +71,26 @@ class NginxTemplater:
         return template_save_abspath
 
 
-    def create_reverse_proxy_template(self, reverse_proxy_template, reverse_proxy_template_ctx, reverse_proxy_template_out):
+    def write_template(self, template_name: str, template_ctx) -> str:
         """
-            server_template: absolute path to template being used
-            server_template_ctx: data being used in template
-            server_template_out: absolute path to new template
+            template_name: name of template, no absolute path
+            template_ctx: data that corresponds to template_name
+        """
+
+        curr_template = self.ENVIRONMENT.get_template(template_name)
+        return curr_template.render(template_ctx)
+
+
+    def create_and_save_template(self, template_name, template_ctx, template_out):
+        """
+            template_name: filename of template
+            template_ctx: data being used in template_name
+            template_out: absolute path to 'template out' directory
         """
 
         # write template
-        curr_template = self.ENVIRONMENT.get_template(reverse_proxy_template)
-        jinja_result = curr_template.render(reverse_proxy_template_ctx)
+        result = self.write_template(template_name, template_ctx)
 
-        # save template to file
-        reverse_proxy_template_out = self.create_template_result_save_path(reverse_proxy_template_out, reverse_proxy_template)
-        return self.save_template_result_to_fs(reverse_proxy_template_out, jinja_result)
+        # create save path & save template to file
+        new_out_dir = self.create_template_result_save_path(template_out, template_name)
+        return self.save_template_result_to_fs(new_out_dir, result)

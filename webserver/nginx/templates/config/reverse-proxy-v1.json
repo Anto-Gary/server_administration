@@ -1,0 +1,10 @@
+{
+    "server": {
+        "listen": 80,
+        "server_name": "www.summry.me",
+        "root": "/home/ubuntu/net_core/net_core_boilerplate",
+        "location": {
+            "proxy_pass": "http://localhost:5000"
+        }
+    }
+}

@@ -25,6 +25,5 @@
   
 
 #### ./main.py
----
 - import newly created methods from ./conf/clsCfgs.py
 - use NginxTemplater.create_and_save_template to see if it works

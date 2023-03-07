@@ -1,5 +1,4 @@
 # NGINX TEMPLATING ENGINE
----
 
 - all templates written to ./templates/out by default
   - subdir name 'out' can be changed in TemplateEngine.py

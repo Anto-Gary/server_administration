@@ -1,7 +1,8 @@
 # NGINX TEMPLATING ENGINE
 ---
 
-- all templates written to ./templates/out
+- all templates written to ./templates/out by default
+  - subdir name 'out' can be changed in TemplateEngine.py
 
 
 ### TEMPLATE WORKFLOW
@@ -11,19 +12,20 @@
 - add actual jinja template file here
 
 
-#### ./templates/config 
-- add JSON data corresponding to a template with same filename
+#### ./templates/context 
+- add JSON data corresponding to a template, with same filename as template it's to be used with
+- subdir name 'context' can be changed in TemplateEngine.py, class specifically looks for ./templates/context
 
 
-#### .env (both files should have same name, minus extension)
+#### .env
 - add filename created in ./templates
-- add filename created in ./templates/config
+  - should have same name, minus extension, as context file in ./templates/context
 
 
 #### ./conf/clsCfgs.py 
-- add new method that returns template name, out_dir, & template context data
+- add new method that returns template name
   
 
 #### ./main.py
 - import newly created methods from ./conf/clsCfgs.py
-- use NginxTemplater.create_and_save_template to see if it works
+- create a method like NginxTemplater.create_reverse_proxy_template

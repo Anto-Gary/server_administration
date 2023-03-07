@@ -6,7 +6,8 @@ from conf.clsCfgs import get_nginx_class_config, get_reverse_proxy_config
 from conf.logger import createLoggingConfig
 from dotenv import load_dotenv
 from logging.config import dictConfig
-from run_code.NginxTemplater import NginxTemplater
+from run_code.NginxTemplater import NginxTemplater, NginxTemplaterException
+from run_code.TemplateEngine import TemplateEngineException
 from sys import exit
 
 load_dotenv()
@@ -17,14 +18,15 @@ dictConfig(createLoggingConfig())
 _LOGGER = logging.getLogger(LOGGER_NAME)
 
 
-def create_reverse_proxy_template(nginx_cls_cfg, reverse_proxy_template_cfg):
+def create_reverse_proxy_template():
+
+    nginx_cls_cfg = get_nginx_class_config()
+    reverse_proxy_template_cfg = get_reverse_proxy_config()
 
     template_engine = NginxTemplater(nginx_cls_cfg)
 
     server_template = reverse_proxy_template_cfg['name']
-    server_template_out = reverse_proxy_template_cfg['out_dir']
-    server_template_ctx = reverse_proxy_template_cfg['context']
-    template_engine.create_and_save_template(server_template, server_template_ctx, server_template_out)
+    template_engine.create_reverse_proxy_template(server_template)
 
 
 if __name__ == "__main__":
@@ -32,13 +34,15 @@ if __name__ == "__main__":
     try: 
         _LOGGER.info("starting script")
 
-        nginx_cls_cfg = get_nginx_class_config()
-        reverse_proxy_template_cfg = get_reverse_proxy_config()
-
-        create_reverse_proxy_template(nginx_cls_cfg, reverse_proxy_template_cfg)
+        create_reverse_proxy_template()
 
         _LOGGER.info("ending script")
 
+    except TemplateEngineException as e:
+        _LOGGER.exception("an exception was caught from template parent class", exc_info=True)
+    except NginxTemplaterException as e:
+        _LOGGER.exception("an exception was caught from template child class", exc_info=True)
     except Exception as e:
         _LOGGER.exception("an unhandled exception occurred", exc_info=True)
+    finally:
         exit(1)

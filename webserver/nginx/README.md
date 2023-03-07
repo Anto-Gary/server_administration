@@ -24,8 +24,12 @@
 
 #### ./conf/clsCfgs.py 
 - add new method that returns template name
-  
+
+
+#### ./run_code/NginxTemplater
+- create a method like NginxTemplater.create_reverse_proxy_template for new template
+
 
 #### ./main.py
-- import newly created methods from ./conf/clsCfgs.py
-- create a method like NginxTemplater.create_reverse_proxy_template
+- import newly created method from ./conf/clsCfgs.py
+- call newly created method in NginxTemplater

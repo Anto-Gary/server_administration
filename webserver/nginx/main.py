@@ -2,7 +2,7 @@ from __future__ import annotations
 import logging
 import os
 
-from conf.clsCfgs import get_nginx_class_config, get_reverse_proxy_config, get_systemd_service_config
+from conf.clsCfgs import get_nginx_class_config, get_reverse_proxy_config, get_systemd_service_config, get_http_load_balancing_config
 from conf.logger import createLoggingConfig
 from dotenv import load_dotenv
 from logging.config import dictConfig
@@ -29,6 +29,18 @@ def create_reverse_proxy_template():
     template_engine.create_reverse_proxy_template(server_template)
 
 
+def create_http_load_balancing_template():
+
+    
+    nginx_cls_cfg = get_nginx_class_config()
+    http_lb_cfg = get_http_load_balancing_config()
+
+    template_engine = NginxTemplater(nginx_cls_cfg)
+
+    template = http_lb_cfg['name']
+    template_engine.create_http_load_balancing_template(template)
+
+
 def create_systemd_service_unit_file_template():
     
     nginx_cls_cfg = get_nginx_class_config()
@@ -46,7 +58,9 @@ if __name__ == "__main__":
         _LOGGER.info("starting script")
 
         create_reverse_proxy_template()
-        create_systemd_service_unit_file_template()
+        # create_systemd_service_unit_file_template()
+        create_http_load_balancing_template()
+        
 
         _LOGGER.info("ending script")
 

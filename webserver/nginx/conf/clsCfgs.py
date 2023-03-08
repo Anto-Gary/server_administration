@@ -10,6 +10,7 @@ load_dotenv(abspath_env)
 ENV_LOGGER_NAME = os.getenv('LOGGER_NAME')
 ENV_TEMPLATES_MAIN_DIR = os.getenv('TEMPLATES_MAIN_DIR')
 ENV_NGINX_REVERSE_PROXY_TEMPLATE = os.getenv('NGINX_REVERSE_PROXY_TEMPLATE')
+ENV_NGINX_HTTP_LOAD_BALANCING_TEMPLATE = os.getenv('NGINX_HTTP_LOAD_BALANCING_TEMPLATE')
 ENV_SYSTEMD_UNIT_FILE_TEMPLATE = os.getenv('SYSTEMD_UNIT_FILE_TEMPLATE')
 # END ENVIRONMENT VARIABLES 
 
@@ -36,4 +37,10 @@ def get_reverse_proxy_config():
 def get_systemd_service_config():
     return {
         "name": ENV_SYSTEMD_UNIT_FILE_TEMPLATE
+    }
+
+
+def get_http_load_balancing_config():
+    return {
+        "name": ENV_NGINX_HTTP_LOAD_BALANCING_TEMPLATE
     }

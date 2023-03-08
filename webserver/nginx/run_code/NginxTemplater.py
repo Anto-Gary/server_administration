@@ -25,3 +25,15 @@ class NginxTemplater(TemplateEngine):
 
         # save to ./templates/out/<template_name>
         return TemplateEngine.save_rendered_template(self, template_name, result)
+    
+
+    def create_http_load_balancing_template(self, template_name):
+        """
+            template_name: filename of template
+        """
+
+        # create template
+        result = TemplateEngine.render_template(self, template_name)
+
+        # save to ./templates/out/<template_name>
+        return TemplateEngine.save_rendered_template(self, template_name, result)

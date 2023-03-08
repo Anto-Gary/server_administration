@@ -1,0 +1,12 @@
+{
+    "description": "systemd service unit file for .net core wineapi",
+    "workingDirectory": "/home/ubuntu/net_core/net_core_boilerplate/bin/Release/net6.0/ubuntu.22.04-x64",
+    "excecStart": "/usr/bin/dotnet /home/ubuntu/net_core/net_core_boilerplate/bin/Release/net6.0/ubuntu.22.04-x64/StarterApi.dll",
+    "sysLogIdentifier": "dotnet-example",
+    "user": "root",
+    "environmentVariables": [
+        { "key": "ASPNETCORE_ENVIRONMENT", "value": "Production" },
+        { "key": "DOTNET_PRINT_TELEMETRY_MESSAGE", "value": "false" }
+    ]
+
+}

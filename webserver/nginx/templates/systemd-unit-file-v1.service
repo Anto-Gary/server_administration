@@ -1,0 +1,22 @@
+[Unit]
+Description={{ description }}
+
+[Service]
+WorkingDirectory={{ workingDirectory }}
+ExecStart={{ excecStart }}
+Restart=always
+RestartSec=10
+KillSignal=SIGINT
+SyslogIdentifier={{ sysLogIdentifier }}
+User={{ user }}
+
+{%- for environmentVariable in environmentVariables %}
+Environment={{ environmentVariable.key }}={{ environmentVariable.value }}
+{%- endfor %}
+
+# If you need to run multiple services on different ports set
+# the ports environment variable here:
+# Environment=ASPNETCORE_URLS=http://localhost:6000[Install]
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,16 @@
+{
+    "upstream": {
+        "name": "backend",
+        "servers":[
+            { "name": "ec2-3-95-202-247.compute-1.amazonaws.com:80"},
+            { "name": "ec2-3-84-36-64.compute-1.amazonaws.com:80"}
+        ]
+    },
+    "server": {
+        "listen": 80,
+        "location": {
+            "path": "/"
+        }
+    }
+    
+}
